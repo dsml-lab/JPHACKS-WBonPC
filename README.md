@@ -25,18 +25,17 @@ I'll show you how I implement this app.
 ## Usage
 
 ## Requirements
+
 - Flask==1.1.1
 - Flask-Login==0.4.1
 - bottle==0.12.17
-- opencv-python==4.1.0.25 
+- opencv-python==4.1.0.25
 - Pillow==6.0.0
 - numpy==1.16.4
 
-
-
 ## Install
 
-you need to build and execute docker container 
+you need to build and execute docker container
 
 ```bash
 $sudo docker-compose up --build
