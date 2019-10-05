@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-def centerFromImage(image, hue_min, hue_max):
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+def centerFromImage(ori_img, hue_min, hue_max):
+    image = cv2.cvtColor(ori_img, cv2.COLOR_BGR2HSV)
     hue = image[:, :, 0]
 
     # Filter out green postit note color
@@ -21,7 +21,8 @@ def centerFromImage(image, hue_min, hue_max):
         cv2.RETR_LIST,
         cv2.CHAIN_APPROX_SIMPLE
     )
-    img = cv2.drawContours(image, contours, -1, (0,255,0), 3)
+    print(contours)
+    img = cv2.drawContours(ori_img, contours, -1, (0,255,0), 3)
     cv2.imwrite("./contours.jpg", img)
     # center = [0, 0]
 
@@ -42,6 +43,16 @@ def centerFromImage(image, hue_min, hue_max):
     #     center = [int(center[0]), int(center[1])]
 
     # return center
+
+
+def hsv_crop(img):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # hsvLower = np.array([30, 153, 255])
+    # hsvUpper = np.array([30, 135, 255])
+    # hsv_mask = cv2.inRange(hsv, hsvLower, hsvUpper)
+
+    # result = cv2.bitwise_and(img, img, mask=hsv_mask)
+    return hsv
 
 
 def getRectByPoints(points):
@@ -108,4 +119,8 @@ if __name__ == "__main__":
     # img = (np.abs(im[:,:,2] - im[:,:,1]) + np.abs(im[:,:,2] - im[:,:,0]))
     # cv2.imwrite("./binary.jpg", img)
 
-    detect_postit("./post_it.jpg")
+    # detect_postit("./postit.jpg")
+    img = cv2.imread("./postit.jpg")
+    centerFromImage(img, 90, 100)
+
+    # cv2.imwrite("./result.jpg", result)
