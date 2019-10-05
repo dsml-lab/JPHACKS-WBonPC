@@ -5,3 +5,5 @@ RUN apt-get update
 WORKDIR /Project
 ADD requirements.txt /Project/
 RUN pip install -r requirements.txt
+RUN pip install jupyterlab
+RUN jupyter serverextension enable --py jupyterlab
