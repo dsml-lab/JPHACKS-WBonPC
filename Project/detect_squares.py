@@ -48,5 +48,4 @@ def main(img_path):
 
 
 if __name__ == '__main__':
-    print(__doc__)
-    main("./post_it.jpg")
+    main("./postit.jpg")

@@ -23,8 +23,7 @@ def centerFromImage(ori_img, hue_min, hue_max):
     )
     print(contours)
     img = cv2.drawContours(ori_img, contours, -1, (0,255,0), 3)
-    cv2.imwrite("./contours.jpg", img)
-    
+    return img
     # center = [0, 0]
 
     # if len(contours) > 0:
@@ -120,8 +119,8 @@ if __name__ == "__main__":
     # img = (np.abs(im[:,:,2] - im[:,:,1]) + np.abs(im[:,:,2] - im[:,:,0]))
     # cv2.imwrite("./binary.jpg", img)
 
-    # detect_postit("./postit.jpg")
-    img = cv2.imread("./postit.jpg")
-    centerFromImage(img, 90, 100)
+    detect_postit("./postit.jpg")
+    # img = cv2.imread("./postit.jpg")
+    # result = centerFromImage(img, 90, 100)
 
     # cv2.imwrite("./result.jpg", result)
