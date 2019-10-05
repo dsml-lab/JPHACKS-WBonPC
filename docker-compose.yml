@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
     container_name: jphack_jupyter
     ports:
-      - "80:8888"
+      - "88:8888"
     volumes:
       - ./Project:/Project # ← notebookをホストと共有したいためディレクトリをマウント
     command: jupyter lab --allow-root --NotebookApp.token=''
