@@ -24,6 +24,7 @@ def centerFromImage(ori_img, hue_min, hue_max):
     print(contours)
     img = cv2.drawContours(ori_img, contours, -1, (0,255,0), 3)
     cv2.imwrite("./contours.jpg", img)
+    
     # center = [0, 0]
 
     # if len(contours) > 0:
