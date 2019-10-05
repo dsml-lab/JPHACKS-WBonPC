@@ -16,10 +16,22 @@ services:
   # jupyterlab:
   #   build:
   #     context: ./Docker
-  #     dockerfile: Dockerfile
+  #     dockerfile: Dockerfile-opencv
   #   container_name: kaggle_jupyter
   #   ports:
   #     - "88:8888"
   #   volumes:
   #     - ./Project:/Project # ← notebookをホストと共有したいためディレクトリをマウント
+  #   command: jupyter lab --allow-root --NotebookApp.token=''
+
+  # jupyterlab:
+  #   image: jupyter/datascience-notebook:latest  
+  #   container_name: jupyterlab  
+  #   environment:  
+  #     TZ: "Asia/Tokyo"  
+  #     JUPYTER_ENABLE_LAB: "yes"  
+  #   ports:  
+  #     - "88:8888"  
+  #   volumes:  
+  #     - ./Project:/Project
   #   command: jupyter lab --allow-root --NotebookApp.token=''
