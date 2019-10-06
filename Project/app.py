@@ -13,52 +13,52 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+import numpy as np
+import cv2
+from datetime import datetime
+import os
+import string
+import random
+from detect_squares import detect_squares
+
+SAVE_DIR = "./uploads"
+if not os.path.isdir(SAVE_DIR):
+    os.mkdir(SAVE_DIR)
+
+app = Flask(__name__, static_url_path="")
+
+def random_str(n):
+    return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(n)])
+
 @app.route('/')
 def index():
-    if 'username' in session:
-        return render_template('index.html')
-    return '''
-        <p>ログインしてください</p>
-    '''
+    return render_template('index.html', images=os.listdir(SAVE_DIR)[::-1])
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        if username == 'admin':
-            session['username'] = request.form['username']
-            return redirect(url_for('index'))
-        else:
-            return '''<p>ユーザー名が違います</p>'''
-    return '''
-        <form action="" method="post">
-            <p><input type="text" name="username">
-            <p><input type="submit" value="Login">
-        </form>
-    '''
+@app.route('/images/<path:path>')
+def send_js(path):
+    return send_from_directory(SAVE_DIR, path)
 
-@app.route('/logout')
-def logout():
-    session.pop('username', None)
-    return redirect(url_for('index'))
+# 参考: https://qiita.com/yuuuu3/items/6e4206fdc8c83747544b
+@app.route('/upload', methods=['POST'])
+def upload():
+    if request.files['image']:
+        # 画像として読み込み
+        stream = request.files['image'].stream
+        img_array = np.asarray(bytearray(stream.read()), dtype=np.uint8)
+        img = cv2.imdecode(img_array, 1)
 
-@app.route('/send', methods=['GET', 'POST'])
-def send():
-    if request.method == 'POST':
-        img_file = request.files['img_file']
-        if img_file and allowed_file(img_file.filename):
-            filename = secure_filename(img_file.filename)
-            img_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            img_url = '../uploads/' + filename
-            return render_template('index.html', img_url=img_url)
-        else:
-            return ''' <p>許可されていない拡張子です</p> '''
-    else:
-        return redirect(url_for('index'))
+        # 変換
+        img = canny(img)
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+        # 保存
+        dt_now = datetime.now().strftime("%Y_%m_%d%_H_%M_%S_") + random_str(5)
+        save_path = os.path.join(SAVE_DIR, dt_now + ".png")
+        cv2.imwrite(save_path, img)
+
+        print("save", save_path)
+
+        return redirect('/')
 
 if __name__ == '__main__':
     app.debug = True
