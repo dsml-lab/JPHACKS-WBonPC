@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>jQuery UI Draggable - Default functionality</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <style>
+  #draggable { width: 150px; height: 150px; padding: 0.5em; }
+  </style>
+  <script>
+  $(function() {
+    $( "#draggable" ).draggable();
+  });
+  </script>
+</head>
+<body>
+<div id="draggable" class="ui-widget-content">
+  <p>ドラッグしてください</p>
+</div>
+</body>
+</html>
