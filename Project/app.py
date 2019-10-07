@@ -1,41 +1,26 @@
-import os
-import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session
-from werkzeug import secure_filename
-
-
-
-app = Flask(__name__)
-
-UPLOAD_FOLDER = '../uploads'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SECRET_KEY'] = os.urandom(24)
-
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import numpy as np
 import cv2
 from datetime import datetime
 import os
 import string
+import io
 import random
 from detect_squares import detect_squares
 
-SAVE_DIR = "./uploads"
+SAVE_DIR = "./static/uploads"
 if not os.path.isdir(SAVE_DIR):
     os.mkdir(SAVE_DIR)
 
-app = Flask(__name__, static_url_path="")
+app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 def random_str(n):
     return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(n)])
 
 @app.route('/')
 def index():
+    print(os.listdir(SAVE_DIR)[::-1])
     return render_template('index.html', images=os.listdir(SAVE_DIR)[::-1])
 
 @app.route('/images/<path:path>')
