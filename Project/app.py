@@ -13,7 +13,6 @@ if not os.path.isdir(SAVE_DIR):
     os.mkdir(SAVE_DIR)
 
 app = Flask(__name__)
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 def random_str(n):
     return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(n)])
