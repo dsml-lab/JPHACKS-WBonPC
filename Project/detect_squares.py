@@ -44,10 +44,10 @@ def main(img_path):
         # ch = cv2.waitKey()
     print('Done')
 
-def detect_squares(img_path):
-    img = cv2.imread(img_path)
+def detect_squares(img):
+    # img = cv2.imread(img_path)
     squares = find_squares(img)
-    contours_img - cv2.drawContours(img, squares, -1, (0, 255, 0), 3)
+    contours_img = cv2.drawContours(img, squares, -1, (0, 255, 0), 3)
     return contours_img
 
 

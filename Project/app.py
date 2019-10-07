@@ -2,6 +2,9 @@ import os
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session
 from werkzeug import secure_filename
+
+
+
 app = Flask(__name__)
 
 UPLOAD_FOLDER = '../uploads'
@@ -49,11 +52,11 @@ def upload():
         img = cv2.imdecode(img_array, 1)
 
         # 変換
-        img = canny(img)
+        img = detect_squares(img)
 
         # 保存
-        dt_now = datetime.now().strftime("%Y_%m_%d%_H_%M_%S_") + random_str(5)
-        save_path = os.path.join(SAVE_DIR, dt_now + ".png")
+        filename = datetime.now().strftime("%Y_%m_%d%_H_%M_%S_") + random_str(5) + ".jpg"
+        save_path = os.path.join(SAVE_DIR, filename)
         cv2.imwrite(save_path, img)
 
         print("save", save_path)
