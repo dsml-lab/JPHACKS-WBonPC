@@ -6,11 +6,11 @@ import os
 import string
 import io
 import random
-from detect_squares import detect_squares
+from detect_squares import detect_postit
 
-SAVE_DIR = "./static/uploads"
-if not os.path.isdir(SAVE_DIR):
-    os.mkdir(SAVE_DIR)
+SAVE_ROOT = "./static/uploads"
+if not os.path.isdir(SAVE_ROOT):
+    os.mkdir(SAVE_ROOT)
 
 app = Flask(__name__)
 
@@ -19,12 +19,20 @@ def random_str(n):
 
 @app.route('/')
 def index():
-    print(os.listdir(SAVE_DIR)[::-1])
-    return render_template('index.html', images=os.listdir(SAVE_DIR)[::-1])
+    # print(os.listdir(SAVE_ROOT)[::-1])
+    import glob
+    img_list = []
+    folder_list = os.listdir(SAVE_ROOT)[::-1]
+    for folder in folder_list:
+        text = os.path.join(SAVE_ROOT, folder)
+        imgs = glob.glob(text + "/*.jpg")
+        img_list.append(imgs)
+
+    return render_template('index.html', images=img_list)
 
 @app.route('/images/<path:path>')
 def send_js(path):
-    return send_from_directory(SAVE_DIR, path)
+    return send_from_directory(SAVE_ROOT, path)
 
 # 参考: https://qiita.com/yuuuu3/items/6e4206fdc8c83747544b
 @app.route('/upload', methods=['POST'])
@@ -35,15 +43,13 @@ def upload():
         img_array = np.asarray(bytearray(stream.read()), dtype=np.uint8)
         img = cv2.imdecode(img_array, 1)
 
+        
+        foldername = datetime.now().strftime("%Y_%m_%d%_H_%M_%S_")
+        save_dir = os.path.join(SAVE_ROOT, foldername)
+        os.makedirs(save_dir, exist_ok=True)
+
         # 変換
-        img = detect_squares(img)
-
-        # 保存
-        filename = datetime.now().strftime("%Y_%m_%d%_H_%M_%S_") + random_str(5) + ".jpg"
-        save_path = os.path.join(SAVE_DIR, filename)
-        cv2.imwrite(save_path, img)
-
-        print("save", save_path)
+        detect_postit(img, save_dir)
 
         return redirect('/')
 

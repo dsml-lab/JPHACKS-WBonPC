@@ -2,6 +2,7 @@ from __future__ import print_function
 import sys
 import numpy as np
 import cv2 
+import os
 
 
 # for (i,cnt) in enumerate(contours_large):
@@ -45,42 +46,27 @@ def find_squares(img):
                         squares.append(cnt)
     return squares
 
-def main(img_path):
-    from glob import glob
-    for fn in glob(img_path):
-        img = cv2.imread(fn)
-        squares = find_squares(img)
-        contours_img = cv2.drawContours(img, squares, -1, (0, 255, 0), 3 )
-        cv2.imwrite("./squares.jpg", contours_img)
-        # cv2.imshow('squares', img)
-        # ch = cv2.waitKey()
-    print('Done')
+
+# def detect_squares(img):
+#     # img = cv2.imread(img_path)
+#     squares = find_squares(img)
+#     contours_img = cv2.drawContours(img, squares, -1, (0, 255, 0), 3)
+#     return contours_img
 
 
-def getRectByPoints(points):
-    # prepare simple array 
-    points = list(map(lambda x: x[0], points))
+def crop_square(img, squares):
+    for idx, square in enumerate(squares):
+        x,y,w,h = cv2.boundingRect(square)
+        if 100 <= w <=500 and 100<= h <= 500:
+            cropped_img = img[y:y+h, x:x+w]
+            yield cropped_img
 
-    points = sorted(points, key=lambda x:x[1])
-    top_points = sorted(points[:2], key=lambda x:x[0])
-    bottom_points = sorted(points[2:4], key=lambda x:x[0])
-    points = top_points + bottom_points
-
-    left = min(points[0][0], points[2][0])
-    right = max(points[1][0], points[3][0])
-    top = min(points[0][1], points[1][1])
-    bottom = max(points[2][1], points[3][1])
-    return (top, bottom, left, right)
-
-
-
-def detect_squares(img):
-    # img = cv2.imread(img_path)
+def detect_postit(img, save_dir):
     squares = find_squares(img)
-    crop_contours(squares)
-    contours_img = cv2.drawContours(img, squares, -1, (0, 255, 0), 3)
-    return contours_img
-
+    for idx, cropped_img in enumerate(crop_square(img, squares)):
+        filename = str(idx) + ".jpg"
+        print()
+        cv2.imwrite(os.path.join(save_dir, filename), cropped_img)
 
 if __name__ == '__main__':
     main("./postit.jpg")
