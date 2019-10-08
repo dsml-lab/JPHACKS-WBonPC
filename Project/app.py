@@ -6,6 +6,7 @@ import os
 import string
 import io
 import random
+import glob
 from detect_squares import detect_postit
 
 SAVE_ROOT = "./static/uploads"
@@ -20,15 +21,9 @@ def random_str(n):
 @app.route('/')
 def index():
     # print(os.listdir(SAVE_ROOT)[::-1])
-    import glob
-    img_list = []
-    folder_list = os.listdir(SAVE_ROOT)[::-1]
-    for folder in folder_list:
-        text = os.path.join(SAVE_ROOT, folder)
-        imgs = glob.glob(text + "/*.jpg")
-        img_list.append(imgs)
+    folder_list = glob.glob(SAVE_ROOT + "/*")
 
-    return render_template('index.html', images=img_list)
+    return render_template('index.html', folders=folder_list)
 
 @app.route('/images/<path:path>')
 def send_js(path):
@@ -53,10 +48,14 @@ def upload():
 
         return redirect('/')
 
-# @app.route('/wb/<folder:folder>')
-# def send_wb(folder):
-#     """folderごとのwbに飛ぶ"""
-#     return render_template()
+@app.route('/wb',methods=['POST'])
+def send_wb():
+    """folderごとのwbに飛ぶ"""
+    folder_path = request.form["folder_path"]
+    print(folder_path)
+    img_list = glob.glob(folder_path + "/*.jpg")
+    # print(img_list)
+    return render_template("whiteboard.html", img_list=img_list, foldername=folder_path)
 
 if __name__ == '__main__':
     app.debug = True
