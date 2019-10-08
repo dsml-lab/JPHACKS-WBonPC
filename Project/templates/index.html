@@ -1,4 +1,3 @@
-{% extends "layout.html" %}
 {% block content %}
 <head>
 <script type="text/javaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js?ver=1.4.2"></script>
@@ -10,15 +9,12 @@
 
 <style>
 #draggable { width: 150px; height: 150px; padding: 0.5em; }
-
 </style>
 
 <script>
 $(function() {
     $( ".draggable" ).draggable();
   });
-
-
 window.onload = function() {
 	var myCanvas = document.getElementById("myCanvas");
 	var ctx = myCanvas.getContext("2d");
@@ -64,29 +60,23 @@ window.onload = function() {
 	draw = {
 		started: false,
 		start: function(evt) {
-
 			ctx.beginPath();
 			ctx.moveTo(
 				evt.touches[0].pageX,
 				evt.touches[0].pageY
 			);
-
 			this.started = true;
-
 		},
 		move: function(evt) {
-
 			if (this.started) {
 				ctx.lineTo(
 					evt.touches[0].pageX,
 					evt.touches[0].pageY
 				);
-
 				ctx.strokeStyle = "#000";
 				ctx.lineWidth = 5;
 				ctx.stroke();
 			}
-
 		},
 		end: function(evt) {
 			this.started = false;
@@ -116,11 +106,13 @@ window.onload = function() {
 
 {% if images %}
   {% for folder in images %}
+  <div class="folder">
+    {{folder[0]}}
     {% for path in folder%}
-      <div class="draggable">
-        <img src=".{{path}}"　width="200" height="200">
+      <div>
+        <img src=".{{path}}"　width="200" height="200" class="draggable" >
       </div>
-      
+    </div>
     {% endfor %}
   {% endfor %}
 {% endif %}

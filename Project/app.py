@@ -53,6 +53,11 @@ def upload():
 
         return redirect('/')
 
+# @app.route('/wb/<folder:folder>')
+# def send_wb(folder):
+#     """folderごとのwbに飛ぶ"""
+#     return render_template()
+
 if __name__ == '__main__':
     app.debug = True
     app.run()
